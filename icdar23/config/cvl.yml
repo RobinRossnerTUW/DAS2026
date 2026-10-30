@@ -1,0 +1,45 @@
+# CVL Writer Identification config
+# Based on icdar2017.yml, adapted for CVL (no clustering, color patches)
+
+super_fancy_new_name: cvl_baseline
+log_dir: experiments
+logger: wandb    # or 'tensorboard'
+
+grayscale: false  # CVL is RGB but pil_loader converts to grayscale anyway
+data_augmentation: morph
+
+trainset:
+  dataset: cvl
+  set: train
+
+testset:
+  dataset: cvl
+  set: test
+
+train_label: writer       # no clusters in CVL — train on writer identity
+use_test_as_validation: true   # only 27 train writers, use test set for val
+
+model:
+  name: resnet20          # adjust if you use a different backbone
+  num_clusters: 32
+  encoding: netvlad
+
+train_options:
+  batch_size: 64
+  epochs: 30
+  margin: 0.2
+  sampler_m: 4
+  length_before_new_iter: 2000
+  callback_patience: 10
+
+optimizer_options:
+  base_lr: 0.0001
+  final_lr: 0.00001
+  warmup_epochs: 2
+  wd: 0.0001
+  gmp_lr_factor: 1.0
+
+test_batch_size: 256
+
+checkpoint: null
+only_test: false
